@@ -155,14 +155,30 @@ async function searchCourse() {
             
             const timeStr = course.時間.map(t => `星期${t.星期} 第${t.節次}節`).join(', ');
             
+            // 檢查是否有時間衝突
+            const conflicts = checkConflict(course);
+            const hasConflict = conflicts.length > 0;
+            
+            // 計算加入後的總學分
+            const currentCredits = calculateTotalCredits();
+            const newCredits = parseFloat(course.學分) || 0;
+            const totalAfterAdd = currentCredits + newCredits;
+            
             courseDiv.innerHTML = `
                 <h4>${course.課程名稱}</h4>
                 <p><strong>課號:</strong> ${course.課號}</p>
+                <p><strong>學分:</strong> <span class="credit-highlight">${course.學分}</span></p>
                 <p><strong>教師:</strong> ${course.教師}</p>
                 <p><strong>班級:</strong> ${course.班級}</p>
                 <p><strong>教室:</strong> ${course.教室}</p>
-                <p><strong>時間:</strong> ${timeStr}</p>
-                <button onclick='addCourse(${JSON.stringify(course).replace(/'/g, "&apos;")})'>加入課程表</button>
+                <p><strong>時間:</strong> ${timeStr || '無固定時間'}</p>
+                ${hasConflict ? '<p class="conflict-warning"><i class="fas fa-exclamation-triangle"></i> 時間衝突！無法加入</p>' : 
+                  `<p class="add-info"><i class="fas fa-info-circle"></i> 加入後總學分: ${totalAfterAdd.toFixed(1)}</p>`}
+                <button 
+                    onclick='addCourse(${JSON.stringify(course).replace(/'/g, "&apos;")})' 
+                    ${hasConflict ? 'disabled class="btn-disabled"' : ''}>
+                    ${hasConflict ? '時間衝突' : '加入課程表'}
+                </button>
             `;
             
             resultsDiv.appendChild(courseDiv);
@@ -203,7 +219,15 @@ function showConflictModal(conflicts) {
         `<strong>${c.course}</strong> (${c.time})`
     ).join('<br>');
     
-    message.innerHTML = `以下課程時間衝突：<br><br>${conflictList}`;
+    message.innerHTML = `
+        <p style="margin-bottom: 15px;">無法加入課程，以下時段已有課程：</p>
+        <div style="background: rgba(239, 68, 68, 0.1); padding: 12px; border-radius: 8px; border-left: 4px solid #ef4444;">
+            ${conflictList}
+        </div>
+        <p style="margin-top: 15px; font-size: 14px; color: var(--text-secondary);">
+            <i class="fas fa-lightbulb"></i> 提示：您可以先移除衝突的課程，或選擇其他時段的課程。
+        </p>
+    `;
     modal.style.display = 'block';
 }
 
@@ -217,12 +241,19 @@ function addCourse(course) {
         return;
     }
     
+    // 計算學分變化
+    const currentCredits = calculateTotalCredits();
+    const newCredits = parseFloat(course.學分) || 0;
+    const totalAfterAdd = currentCredits + newCredits;
+    
     // 無衝突，加入課程表
     timetableData.push(course);
     renderTimetable();
     saveTimetable();
     
-    alert('課程已成功加入');
+    // 顯示成功訊息，包含學分資訊
+    const message = `✓ 課程已成功加入！\n\n📚 ${course.課程名稱}\n💎 學分: ${course.學分}\n📊 目前總學分: ${totalAfterAdd.toFixed(1)}`;
+    alert(message);
     
     // 移動端自動關閉側邊欄
     if (window.innerWidth <= 768) {
@@ -232,7 +263,15 @@ function addCourse(course) {
 
 // 刪除課程
 function deleteCourse(index) {
-    if (confirm('確定要刪除此課程嗎？')) {
+    const course = timetableData[index];
+    const courseName = course.課程名稱;
+    const credits = parseFloat(course.學分) || 0;
+    const currentTotal = calculateTotalCredits();
+    const newTotal = currentTotal - credits;
+    
+    const confirmMessage = `確定要刪除此課程嗎？\n\n📚 ${courseName}\n💎 學分: ${credits}\n📊 刪除後總學分: ${newTotal.toFixed(1)}`;
+    
+    if (confirm(confirmMessage)) {
         timetableData.splice(index, 1);
         renderTimetable();
         saveTimetable();
@@ -313,10 +352,19 @@ function addTentativeCourse() {
         return;
     }
     
+    // 計算學分變化
+    const currentCredits = calculateTotalCredits();
+    const newCredits = parseFloat(credits) || 0;
+    const totalAfterAdd = currentCredits + newCredits;
+    
     // 加入課程表
     timetableData.push(tentativeCourse);
     renderTimetable();
     saveTimetable();
+    
+    // 顯示成功訊息
+    const message = `✓ 暫定課程已加入！\n\n📚 ${courseName}\n💎 學分: ${credits}\n📊 目前總學分: ${totalAfterAdd.toFixed(1)}`;
+    alert(message);
     
     // 關閉彈窗
     document.getElementById('tentativeModal').style.display = 'none';
