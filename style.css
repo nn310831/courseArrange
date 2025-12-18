@@ -1,0 +1,1135 @@
+:root {
+    --bg-primary: #0a0e27;
+    --bg-secondary: #1a1f3a;
+    --bg-card: rgba(255, 255, 255, 0.05);
+    --text-primary: #ffffff;
+    --text-secondary: #a0aec0;
+    --accent-primary: #667eea;
+    --accent-secondary: #764ba2;
+    --accent-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    --border-color: rgba(255, 255, 255, 0.1);
+    --shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    --hover-bg: rgba(102, 126, 234, 0.1);
+}
+
+body.light-mode {
+    --bg-primary: #f0f4f8;
+    --bg-secondary: #ffffff;
+    --bg-card: rgba(255, 255, 255, 0.9);
+    --text-primary: #2d3748;
+    --text-secondary: #718096;
+    --border-color: rgba(0, 0, 0, 0.1);
+    --shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    --hover-bg: rgba(102, 126, 234, 0.05);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    padding: 20px;
+    transition: background 0.3s ease, color 0.3s ease;
+    position: relative;
+    min-height: 100vh;
+}
+
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+        radial-gradient(circle at 20% 50%, rgba(102, 126, 234, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(118, 75, 162, 0.1) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 0;
+}
+
+body.light-mode::before {
+    background: 
+        radial-gradient(circle at 20% 50%, rgba(102, 126, 234, 0.05) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(118, 75, 162, 0.05) 0%, transparent 50%);
+}
+
+/* 主題切換按鈕 */
+.theme-toggle {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: var(--accent-gradient);
+    border: none;
+    color: white;
+    font-size: 20px;
+    cursor: pointer;
+    box-shadow: var(--shadow);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.theme-toggle:hover {
+    transform: scale(1.1) rotate(15deg);
+    box-shadow: 0 8px 32px rgba(102, 126, 234, 0.5);
+}
+
+.theme-toggle:active {
+    transform: scale(0.95);
+}
+
+/* 學分顯示 */
+.credits-display {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 1000;
+    background: var(--bg-card);
+    backdrop-filter: blur(10px);
+    border: 2px solid var(--border-color);
+    border-radius: 16px;
+    padding: 15px 20px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    box-shadow: var(--shadow);
+    transition: all 0.3s ease;
+    min-width: 150px;
+}
+
+.credits-display:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 40px rgba(102, 126, 234, 0.4);
+    border-color: var(--accent-primary);
+}
+
+.credits-icon {
+    width: 45px;
+    height: 45px;
+    border-radius: 12px;
+    background: var(--accent-gradient);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    color: white;
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.credits-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.credits-label {
+    font-size: 12px;
+    color: var(--text-secondary);
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+.credits-value {
+    font-size: 28px;
+    font-weight: 700;
+    background: var(--accent-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1;
+    transition: transform 0.3s ease;
+}
+
+/* 響應式 - 學分顯示 */
+@media (max-width: 768px) {
+    .credits-display {
+        top: 10px;
+        left: 10px;
+        padding: 12px 16px;
+        min-width: 130px;
+    }
+    
+    .credits-icon {
+        width: 40px;
+        height: 40px;
+        font-size: 18px;
+    }
+    
+    .credits-value {
+        font-size: 24px;
+    }
+    
+    .theme-toggle {
+        top: 10px;
+        right: 10px;
+        width: 45px;
+        height: 45px;
+    }
+}
+
+.container {
+    display: flex;
+    gap: 30px;
+    max-width: 1600px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+}
+
+.timetable-container {
+    flex: 1;
+    background: var(--bg-card);
+    backdrop-filter: blur(10px);
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border-color);
+    transition: all 0.3s ease;
+}
+
+.header-with-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 30px;
+}
+
+.header-with-icon i {
+    font-size: 36px;
+    background: var(--accent-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+h1 {
+    text-align: center;
+    color: var(--text-primary);
+    font-size: 32px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+}
+
+/* 課程表樣式 */
+.timetable {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    overflow: hidden;
+    border-radius: 12px;
+}
+
+.timetable th,
+.timetable td {
+    border: 1px solid var(--border-color);
+    padding: 12px;
+    text-align: center;
+    min-width: 100px;
+    height: 65px;
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.timetable th {
+    background: var(--accent-gradient);
+    color: white;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-size: 14px;
+    position: relative;
+    overflow: hidden;
+}
+
+.timetable th::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: left 0.5s ease;
+}
+
+.timetable th:hover::before {
+    left: 100%;
+}
+
+.timetable th:first-child {
+    background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+}
+
+.timetable tbody tr:hover {
+    background-color: var(--hover-bg);
+}
+
+.timetable td {
+    background: var(--bg-card);
+}
+
+/* 課程塊樣式 */
+.course-block {
+    background: var(--accent-gradient);
+    color: white;
+    padding: 10px;
+    border-radius: 8px;
+    font-size: 12px;
+    cursor: pointer;
+    position: relative;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+    transition: all 0.3s ease;
+    overflow: hidden;
+}
+
+.course-block::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, transparent 100%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.course-block:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
+}
+
+.course-block:hover::before {
+    opacity: 1;
+}
+
+.course-name {
+    font-weight: bold;
+    margin-bottom: 2px;
+}
+
+.course-teacher {
+    font-size: 11px;
+    opacity: 0.9;
+}
+
+.course-classroom {
+    font-size: 10px;
+    opacity: 0.8;
+}
+
+.delete-btn {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    background: rgba(239, 68, 68, 0.9);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 22px;
+    height: 22px;
+    cursor: pointer;
+    font-size: 14px;
+    line-height: 1;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    z-index: 10;
+}
+
+.delete-btn:hover {
+    background: rgba(239, 68, 68, 1);
+    transform: scale(1.15) rotate(90deg);
+    box-shadow: 0 2px 8px rgba(239, 68, 68, 0.5);
+}
+
+/* 右側選單樣式 */
+.sidebar {
+    width: 350px;
+    background: var(--bg-card);
+    backdrop-filter: blur(10px);
+    padding: 25px;
+    border-radius: 20px;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border-color);
+    position: sticky;
+    top: 20px;
+    height: fit-content;
+    transition: all 0.3s ease;
+}
+
+.sidebar-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid var(--border-color);
+}
+
+.sidebar-header i {
+    font-size: 24px;
+    background: var(--accent-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.sidebar h2 {
+    color: var(--text-primary);
+    font-size: 22px;
+    font-weight: 600;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    color: var(--text-primary);
+    font-weight: 500;
+    font-size: 14px;
+    letter-spacing: 0.3px;
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    padding: 12px 16px;
+    border: 2px solid var(--border-color);
+    border-radius: 10px;
+    font-size: 14px;
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+    transition: all 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: var(--accent-primary);
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    transform: translateY(-1px);
+}
+
+.form-group input::placeholder {
+    color: var(--text-secondary);
+}
+
+.btn-primary {
+    width: 100%;
+    padding: 14px;
+    background: var(--accent-gradient);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-bottom: 20px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-primary::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+    transition: left 0.5s ease;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 25px rgba(102, 126, 234, 0.5);
+}
+
+.btn-primary:hover::before {
+    left: 100%;
+}
+
+.btn-primary:active {
+    transform: translateY(0);
+}
+
+.btn-secondary {
+    padding: 10px 20px;
+    background: var(--accent-gradient);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.btn-secondary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
+}
+
+/* 搜尋結果樣式 */
+.search-results {
+    max-height: 550px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--accent-primary) var(--bg-secondary);
+}
+
+.search-results::-webkit-scrollbar {
+    width: 8px;
+}
+
+.search-results::-webkit-scrollbar-track {
+    background: var(--bg-secondary);
+    border-radius: 10px;
+}
+
+.search-results::-webkit-scrollbar-thumb {
+    background: var(--accent-gradient);
+    border-radius: 10px;
+}
+
+.course-item {
+    border: 2px solid var(--border-color);
+    padding: 16px;
+    margin-bottom: 12px;
+    border-radius: 12px;
+    background: var(--bg-secondary);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.course-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background: var(--accent-gradient);
+    transform: scaleY(0);
+    transition: transform 0.3s ease;
+}
+
+.course-item:hover {
+    border-color: var(--accent-primary);
+    transform: translateX(4px);
+    box-shadow: 0 4px 20px rgba(102, 126, 234, 0.2);
+}
+
+.course-item:hover::before {
+    transform: scaleY(1);
+}
+
+.course-item h4 {
+    color: var(--text-primary);
+    margin-bottom: 8px;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.course-item p {
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin: 5px 0;
+    line-height: 1.5;
+}
+
+.course-item button {
+    margin-top: 12px;
+    padding: 8px 16px;
+    background: var(--accent-gradient);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+}
+
+.course-item button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.5);
+}
+
+/* 彈窗樣式 */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 2000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(5px);
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideUp {
+    from { 
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to { 
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.modal-content {
+    background: var(--bg-card);
+    backdrop-filter: blur(10px);
+    margin: 15% auto;
+    padding: 30px;
+    border-radius: 20px;
+    width: 450px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    border: 1px solid var(--border-color);
+    animation: slideUp 0.3s ease;
+}
+
+.modal-content h2 {
+    color: #ef4444;
+    margin-bottom: 20px;
+    font-size: 24px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.modal-content h2::before {
+    content: '⚠️';
+    font-size: 28px;
+}
+
+.modal-content p {
+    color: var(--text-secondary);
+    margin-bottom: 25px;
+    line-height: 1.6;
+    font-size: 15px;
+}
+
+.close {
+    color: var(--text-secondary);
+    float: right;
+    font-size: 32px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    line-height: 1;
+}
+
+.close:hover,
+.close:focus {
+    color: var(--text-primary);
+    transform: rotate(90deg);
+}
+
+/* 載入動畫 */
+.loading {
+    text-align: center;
+    padding: 30px;
+    color: var(--text-secondary);
+    font-size: 16px;
+}
+
+.loading::after {
+    content: '...';
+    animation: dots 1.5s steps(4, end) infinite;
+}
+
+@keyframes dots {
+    0%, 20% { content: '.'; }
+    40% { content: '..'; }
+    60%, 100% { content: '...'; }
+}
+
+/* 移動端浮動操作按鈕 */
+.mobile-fab {
+    display: none;
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: var(--accent-gradient);
+    border: none;
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
+    box-shadow: 0 8px 24px rgba(102, 126, 234, 0.5);
+    z-index: 999;
+    transition: all 0.3s ease;
+}
+
+.mobile-fab:hover {
+    transform: scale(1.1) rotate(90deg);
+    box-shadow: 0 12px 32px rgba(102, 126, 234, 0.7);
+}
+
+.mobile-fab:active {
+    transform: scale(0.95);
+}
+
+/* 側邊欄關閉按鈕 */
+.sidebar-close {
+    display: none;
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    background: rgba(239, 68, 68, 0.1);
+    border: none;
+    color: var(--text-primary);
+    font-size: 18px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    z-index: 10;
+}
+
+.sidebar-close:hover {
+    background: rgba(239, 68, 68, 0.2);
+    transform: rotate(90deg);
+}
+
+/* 響應式設計 */
+@media (max-width: 1200px) {
+    .container {
+        flex-direction: column;
+    }
+    
+    .sidebar {
+        width: 100%;
+        position: relative;
+        top: 0;
+    }
+}
+
+/* 平板設備 */
+@media (max-width: 992px) {
+    .timetable th,
+    .timetable td {
+        min-width: 80px;
+        padding: 8px;
+        font-size: 13px;
+    }
+    
+    .course-block {
+        font-size: 11px;
+        padding: 8px;
+    }
+    
+    .course-name {
+        font-size: 11px;
+    }
+    
+    .course-teacher,
+    .course-classroom {
+        font-size: 10px;
+    }
+}
+
+/* 移動設備 */
+@media (max-width: 768px) {
+    body {
+        padding: 10px;
+    }
+    
+    /* 調整容器佈局 */
+    .container {
+        gap: 15px;
+    }
+    
+    /* 課程表容器 */
+    .timetable-container {
+        padding: 15px;
+        border-radius: 15px;
+        margin-bottom: 80px;
+    }
+    
+    .header-with-icon h1 {
+        font-size: 24px;
+    }
+    
+    .header-with-icon i {
+        font-size: 28px;
+    }
+    
+    /* 課程表 */
+    .timetable {
+        font-size: 12px;
+    }
+    
+    .timetable th,
+    .timetable td {
+        min-width: 45px;
+        height: 50px;
+        padding: 5px;
+        font-size: 11px;
+    }
+    
+    .timetable th {
+        font-size: 10px;
+        padding: 8px 4px;
+    }
+    
+    .course-block {
+        font-size: 9px;
+        padding: 5px;
+    }
+    
+    .course-name {
+        font-size: 10px;
+        margin-bottom: 2px;
+    }
+    
+    .course-teacher,
+    .course-classroom {
+        font-size: 8px;
+    }
+    
+    .delete-btn {
+        width: 18px;
+        height: 18px;
+        font-size: 12px;
+        top: 2px;
+        right: 2px;
+    }
+    
+    .tentative-badge {
+        font-size: 8px;
+        padding: 1px 5px;
+    }
+    
+    .add-tentative-btn {
+        font-size: 18px;
+        opacity: 1;
+    }
+    
+    /* 側邊欄變為彈出式 */
+    .sidebar {
+        position: fixed;
+        top: 0;
+        right: -100%;
+        width: 85%;
+        max-width: 400px;
+        height: 100vh;
+        z-index: 1001;
+        transition: right 0.3s ease;
+        overflow-y: auto;
+        border-radius: 0;
+        padding-top: 60px;
+    }
+    
+    .sidebar.active {
+        right: 0;
+    }
+    
+    .sidebar-close {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    /* 遮罩層 */
+    .sidebar.active::before {
+        content: '';
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: -1;
+    }
+    
+    /* 顯示移動端按鈕 */
+    .mobile-fab {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    /* 調整主題切換按鈕位置 */
+    .theme-toggle {
+        top: 15px;
+        right: 15px;
+        width: 45px;
+        height: 45px;
+        font-size: 18px;
+    }
+    
+    /* 調整學分顯示 */
+    .credits-display {
+        top: 15px;
+        left: 15px;
+        padding: 10px 15px;
+        min-width: 120px;
+        gap: 10px;
+    }
+    
+    .credits-icon {
+        width: 38px;
+        height: 38px;
+        font-size: 18px;
+    }
+    
+    .credits-label {
+        font-size: 10px;
+    }
+    
+    .credits-value {
+        font-size: 22px;
+    }
+    
+    /* 彈窗優化 */
+    .modal-content {
+        width: 90%;
+        max-width: 350px;
+        padding: 25px 20px;
+        margin: 25% auto;
+    }
+    
+    .modal-content h2 {
+        font-size: 20px;
+    }
+    
+    .form-group input,
+    .form-group select {
+        padding: 10px 14px;
+        font-size: 14px;
+    }
+    
+    .btn-primary {
+        padding: 12px;
+        font-size: 15px;
+    }
+    
+    /* 搜尋結果 */
+    .search-results {
+        max-height: 350px;
+    }
+    
+    .course-item {
+        padding: 12px;
+        font-size: 13px;
+    }
+    
+    .course-item h4 {
+        font-size: 14px;
+    }
+    
+    .course-item p {
+        font-size: 12px;
+    }
+}
+
+/* 小型手機 */
+@media (max-width: 480px) {
+    .timetable th,
+    .timetable td {
+        min-width: 38px;
+        height: 45px;
+        padding: 3px;
+    }
+    
+    .header-with-icon h1 {
+        font-size: 20px;
+    }
+    
+    .header-with-icon i {
+        font-size: 24px;
+    }
+    
+    .course-block {
+        font-size: 8px;
+        padding: 4px;
+    }
+    
+    .course-name {
+        font-size: 9px;
+    }
+    
+    .mobile-fab {
+        width: 55px;
+        height: 55px;
+        bottom: 20px;
+        right: 20px;
+        font-size: 22px;
+    }
+    
+    .credits-display {
+        padding: 8px 12px;
+        min-width: 100px;
+    }
+    
+    .credits-icon {
+        width: 35px;
+        height: 35px;
+        font-size: 16px;
+    }
+    
+    .credits-value {
+        font-size: 20px;
+    }
+    
+    .theme-toggle {
+        width: 40px;
+        height: 40px;
+        font-size: 16px;
+    }
+}
+
+/* 平滑滾動 */
+html {
+    scroll-behavior: smooth;
+}
+
+/* 新增暫定課程按鈕 */
+.add-tentative-btn {
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    border: 2px dashed var(--border-color);
+    border-radius: 8px;
+    color: var(--text-secondary);
+    font-size: 24px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+}
+
+.timetable td[data-day]:hover .add-tentative-btn {
+    opacity: 1;
+}
+
+.add-tentative-btn:hover {
+    background: var(--hover-bg);
+    border-color: var(--accent-primary);
+    color: var(--accent-primary);
+    transform: scale(1.1);
+}
+
+.add-tentative-btn i {
+    pointer-events: none;
+}
+
+/* 暫定課程樣式 */
+.tentative-course {
+    background: linear-gradient(135deg, #f59e0b 0%, #f97316 100%) !important;
+    border: 2px dashed rgba(255, 255, 255, 0.5);
+    position: relative;
+    overflow: visible;
+}
+
+.tentative-course::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: repeating-linear-gradient(
+        45deg,
+        transparent,
+        transparent 10px,
+        rgba(255, 255, 255, 0.05) 10px,
+        rgba(255, 255, 255, 0.05) 20px
+    );
+    pointer-events: none;
+}
+
+.tentative-badge {
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    background: rgba(255, 255, 255, 0.9);
+    color: #f97316;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    z-index: 5;
+}
+
+/* 暫定課程彈窗樣式 */
+.tentative-modal h2 {
+    color: var(--text-primary) !important;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.tentative-modal h2::before {
+    content: none !important;
+}
+
+.tentative-modal h2 i {
+    color: #f59e0b;
+}
+
+.tentative-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.tentative-actions button {
+    flex: 1;
+}
+
+.tentative-modal .form-group input[type="number"] {
+    -moz-appearance: textfield;
+}
+
+.tentative-modal .form-group input[type="number"]::-webkit-outer-spin-button,
+.tentative-modal .form-group input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}

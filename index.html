@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>課程表管理系統</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- 主題切換按鈕 -->
+    <button class="theme-toggle" id="themeToggle" title="切換主題">
+        <i class="fas fa-moon"></i>
+    </button>
+    
+    <!-- 學分顯示 -->
+    <div class="credits-display" id="creditsDisplay">
+        <div class="credits-icon">
+            <i class="fas fa-graduation-cap"></i>
+        </div>
+        <div class="credits-info">
+            <div class="credits-label">總學分</div>
+            <div class="credits-value" id="totalCredits">0</div>
+        </div>
+    </div>
+
+    <!-- 移動端浮動操作按鈕 -->
+    <button class="mobile-fab" id="mobileFab" title="新增課程">
+        <i class="fas fa-plus"></i>
+    </button>
+    
+    <div class="container">
+        <!-- 課程表 -->
+        <div class="timetable-container">
+            <div class="header-with-icon">
+                <i class="fas fa-calendar-alt"></i>
+                <h1>課程表</h1>
+            </div>
+            <table class="timetable">
+                <thead>
+                    <tr>
+                        <th>節次</th>
+                        <th>日</th>
+                        <th>一</th>
+                        <th>二</th>
+                        <th>三</th>
+                        <th>四</th>
+                        <th>五</th>
+                        <th>六</th>
+                    </tr>
+                </thead>
+                <tbody id="timetable-body">
+                    <!-- 動態生成 -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- 右側浮動選單 -->
+        <div class="sidebar" id="sidebar">
+            <button class="sidebar-close" id="sidebarClose">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="sidebar-header">
+                <i class="fas fa-plus-circle"></i>
+                <h2>新增課程</h2>
+            </div>
+            
+            <div class="form-group">
+                <label for="year">學年度</label>
+                <select id="year">
+                    <option value="114">114</option>
+                    <option value="113">113</option>
+                    <option value="112">112</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="semester">學期</label>
+                <select id="semester">
+                    <option value="1">第一學期</option>
+                    <option value="2">第二學期</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="courseName">課程名稱</label>
+                <input type="text" id="courseName" placeholder="輸入課程名稱">
+            </div>
+
+            <button id="searchBtn" class="btn-primary">查詢課程</button>
+
+            <div id="searchResults" class="search-results">
+                <!-- 查詢結果顯示在這裡 -->
+            </div>
+        </div>
+    </div>
+
+    <!-- 衝突提醒彈窗 -->
+    <div id="conflictModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>時間衝突</h2>
+            <p id="conflictMessage"></p>
+            <button class="btn-secondary" id="closeModal">確定</button>
+        </div>
+    </div>
+
+    <!-- 暫定課程彈窗 -->
+    <div id="tentativeModal" class="modal">
+        <div class="modal-content tentative-modal">
+            <span class="close" id="closeTentative">&times;</span>
+            <h2><i class="fas fa-edit"></i> 新增暫定課程</h2>
+            <div class="form-group">
+                <label for="tentativeCourseName">課程名稱</label>
+                <input type="text" id="tentativeCourseName" placeholder="輸入課程名稱" autocomplete="off">
+            </div>
+            <div class="form-group">
+                <label for="tentativeCredits">學分數 (選填)</label>
+                <input type="number" id="tentativeCredits" placeholder="0.0" step="0.5" min="0" max="10">
+            </div>
+            <div class="tentative-actions">
+                <button class="btn-secondary" id="cancelTentative">取消</button>
+                <button class="btn-primary" id="confirmTentative">確定</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
