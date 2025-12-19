@@ -3,6 +3,10 @@ from flask_cors import CORS
 import requests
 import re
 import os
+import urllib3
+
+# 禁用 SSL 警告（因為北科大證書有問題）
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 app = Flask(__name__, static_folder='.')
 CORS(app)
@@ -94,10 +98,11 @@ def query_course(year, sem, cname):
     Returns:
         list: 課程資訊列表
     """
-    url = "https://aps.ntut.edu.tw/course/tw/QueryCourse.jsp"
-    
-    # 準備 form data
-    form_data = {
+    try:
+        url = "https://aps.ntut.edu.tw/course/tw/QueryCourse.jsp"
+        
+        # 準備 form data
+        form_data = {
         'stime': '0',
         'year': str(year),
         'matric': "'1','5','6','7','8','9'",
@@ -129,12 +134,19 @@ def query_course(year, sem, cname):
         'P13': 'ON',
     }
     
-    # 發送 POST 請求
-    response = requests.post(url, data=form_data)
-    
-    if response.status_code == 200:
-        return parse_course_time(response.text)
-    else:
+        # 發送 POST 請求（禁用 SSL 驗證以解決北科大證書問題）
+        print(f"發送請求到: {url}")
+        response = requests.post(url, data=form_data, timeout=30, verify=False)
+        print(f"回應狀態碼: {response.status_code}")
+        
+        if response.status_code == 200:
+            courses = parse_course_time(response.text)
+            return courses
+        else:
+            print(f"請求失敗，狀態碼: {response.status_code}")
+            return []
+    except Exception as e:
+        print(f"query_course 錯誤: {str(e)}")
         return []
 
 
@@ -150,19 +162,31 @@ def static_files(path):
 
 @app.route('/api/search_course', methods=['POST'])
 def search_course():
-    data = request.json
-    year = data.get('year', '114')
-    semester = data.get('semester', '2')
-    course_name = data.get('courseName', '')
-    
-    if not course_name:
-        return jsonify([])
-    
-    courses = query_course(year, semester, course_name)
-    return jsonify(courses)
+    try:
+        print("收到搜尋請求")
+        data = request.json
+        print(f"請求數據: {data}")
+        
+        year = data.get('year', '114')
+        semester = data.get('semester', '2')
+        course_name = data.get('courseName', '')
+        
+        print(f"查詢參數 - 年度: {year}, 學期: {semester}, 課程名稱: {course_name}")
+        
+        if not course_name:
+            return jsonify([])
+        
+        courses = query_course(year, semester, course_name)
+        print(f"找到 {len(courses)} 筆課程")
+        return jsonify(courses)
+    except Exception as e:
+        print(f"錯誤: {str(e)}")
+        import traceback
+        traceback.print_exc()
+        return jsonify({'error': str(e)}), 500
 
 
 if __name__ == '__main__':
-    port = int(os.environ.get('PORT', 5000))
+    port = int(os.environ.get('PORT', 5001))
     print(f"伺服器啟動中... 端口: {port}")
     app.run(host='0.0.0.0', debug=False, port=port)

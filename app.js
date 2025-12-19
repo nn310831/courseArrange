@@ -1,5 +1,5 @@
 // API 配置
-const API_BASE_URL = "https://coursearrange.onrender.com";  // 自動使用當前網域
+const API_BASE_URL = window.location.origin;  // 自動使用當前網域
 
 // 課程表數據存儲
 let timetableData = [];
