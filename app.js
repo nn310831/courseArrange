@@ -1,3 +1,6 @@
+// API 配置
+const API_BASE_URL = window.location.origin;  // 自動使用當前網域
+
 // 課程表數據存儲
 let timetableData = [];
 
@@ -129,7 +132,7 @@ async function searchCourse() {
     resultsDiv.innerHTML = '<div class="loading">查詢中...</div>';
     
     try {
-        const response = await fetch('/api/search_course', {
+        const response = await fetch(`${API_BASE_URL}/api/search_course`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
