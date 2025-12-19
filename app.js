@@ -257,11 +257,6 @@ function addCourse(course) {
     // 顯示成功訊息，包含學分資訊
     const message = `✓ 課程已成功加入！\n\n📚 ${course.課程名稱}\n💎 學分: ${course.學分}\n📊 目前總學分: ${totalAfterAdd.toFixed(1)}`;
     alert(message);
-    
-    // 移動端自動關閉側邊欄
-    if (window.innerWidth <= 768) {
-        closeSidebar();
-    }
 }
 
 // 刪除課程
@@ -403,17 +398,6 @@ function loadTheme() {
     }
 }
 
-// 移動端側邊欄控制
-function toggleSidebar() {
-    const sidebar = document.getElementById('sidebar');
-    sidebar.classList.toggle('active');
-}
-
-function closeSidebar() {
-    const sidebar = document.getElementById('sidebar');
-    sidebar.classList.remove('active');
-}
-
 // 事件監聽
 document.addEventListener('DOMContentLoaded', () => {
     initTimetable();
@@ -423,18 +407,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // 主題切換
     document.getElementById('themeToggle').addEventListener('click', toggleTheme);
     
-    // 移動端浮動按鈕
-    const mobileFab = document.getElementById('mobileFab');
-    if (mobileFab) {
-        mobileFab.addEventListener('click', toggleSidebar);
-    }
-    
-    // 側邊欄關閉按鈕
-    const sidebarClose = document.getElementById('sidebarClose');
-    if (sidebarClose) {
-        sidebarClose.addEventListener('click', closeSidebar);
-    }
-    
+    // 搜尋按鈕
     document.getElementById('searchBtn').addEventListener('click', searchCourse);
     
     // 衝突彈窗關閉事件
@@ -476,18 +449,6 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('tentativeCourseName').addEventListener('keypress', (e) => {
         if (e.key === 'Enter') {
             addTentativeCourse();
-        }
-    });
-    
-    // 點擊遮罩層關閉側邊欄
-    window.addEventListener('click', (event) => {
-        const sidebar = document.getElementById('sidebar');
-        const mobileFab = document.getElementById('mobileFab');
-        
-        if (sidebar.classList.contains('active') && 
-            !sidebar.contains(event.target) && 
-            event.target !== mobileFab) {
-            closeSidebar();
         }
     });
 });

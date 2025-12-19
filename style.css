@@ -900,48 +900,24 @@ h1 {
         opacity: 1;
     }
     
-    /* 側邊欄變為彈出式 */
+    /* 手機版側邊欄變為正常流佈局 */
     .sidebar {
-        position: fixed;
-        top: 0;
-        right: -100%;
-        width: 85%;
-        max-width: 400px;
-        height: 100vh;
-        z-index: 1001;
-        transition: right 0.3s ease;
-        overflow-y: auto;
-        border-radius: 0;
-        padding-top: 60px;
+        position: relative;
+        width: 100%;
+        max-width: 100%;
+        height: auto;
+        padding: 20px 15px;
+        border-radius: 15px;
     }
     
-    .sidebar.active {
-        right: 0;
-    }
-    
-    .sidebar-close {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-    
-    /* 遮罩層 */
-    .sidebar.active::before {
-        content: '';
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100vw;
-        height: 100vh;
-        background: rgba(0, 0, 0, 0.5);
-        z-index: -1;
-    }
-    
-    /* 顯示移動端按鈕 */
+    /* 隱藏FAB按鈕 */
     .mobile-fab {
-        display: flex;
-        align-items: center;
-        justify-content: center;
+        display: none !important;
+    }
+    
+    /* 隱藏關閉按鈕 */
+    .sidebar-close {
+        display: none;
     }
     
     /* 調整主題切換按鈕位置 */
@@ -976,6 +952,15 @@ h1 {
         font-size: 22px;
     }
     
+    /* 表單標題樣式 */
+    .sidebar-header h2 {
+        font-size: 18px;
+    }
+    
+    .sidebar-header i {
+        font-size: 20px;
+    }
+    
     /* 彈窗優化 */
     .modal-content {
         width: 90%;
@@ -1001,7 +986,7 @@ h1 {
     
     /* 搜尋結果 */
     .search-results {
-        max-height: 350px;
+        max-height: 400px;
     }
     
     .course-item {
